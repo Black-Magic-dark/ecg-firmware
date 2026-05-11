@@ -1,0 +1,7 @@
+﻿# Arduino
+*.elf
+*.hex
+*.bin
+*.map
+build/
+.vscode/
