@@ -4,6 +4,14 @@
  * AI-Based Real-Time ECG Anomaly Detection System
  * ESP32 + AD8232
  *
+ * Architecture (v2): Dumb USB ADC Bridge
+ *   This firmware intentionally contains NO WiFi, NO HTTP, NO cloud logic.
+ *   The ESP32 role is purely: read ADC at 250Hz → stream CSV over USB Serial.
+ *   All intelligence (ML inference, alerts, cloud upload) runs on the RPi 4B.
+ *
+ * Connection:
+ *   ESP32 USB → Raspberry Pi 4B (/dev/ttyUSB0 or /dev/ttyACM0)
+ *
  * Pin Mapping:
  *   AD8232 OUTPUT → GPIO34  (ADC input-only, 12-bit)
  *   AD8232 LO+    → GPIO32  (Lead-off detection)
@@ -16,11 +24,11 @@
  *   <millis>,<ecg_value>,<lead_off>\n
  *   e.g.  12345,2048,0
  *
- * Serial Commands from Laptop:
- *   BUZZ_ON   → activate buzzer
+ * Serial Commands from RPi (via USB Serial):
+ *   BUZZ_ON   → activate buzzer  (sent by realtime_inference.py on ABNORMAL alert)
  *   BUZZ_OFF  → deactivate buzzer
  *
- * Sampling Rate: 250 Hz (4 ms interval)
+ * Sampling Rate: 250 Hz (4 ms interval, hardware timer ISR)
  * ─────────────────────────────────────────────────────────────────────────
  */
 
